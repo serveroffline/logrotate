@@ -1,6 +1,5 @@
 #!/bin/bash
-
-#Script for DaemonCommands = -f /var/log/collectl/performance-tab -r00:00,0 -F1 -s+YZ -oz -P --interval 30
+# Script for DaemonCommands = -f /var/log/collectl/performance-tab -r00:00,0 -F1 -s+YZ -oz -P --interval 30
 DF=`date +%Y%m%d`
 HN=`hostname -s`
 PATH=/var/log/collectl
