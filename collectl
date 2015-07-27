@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#Script for DaemonCommands = -f /var/log/collectl/performance-tab -r00:00,0 -F1 -s+YZ -oz -P --interval 30
+DF=`date +%Y%m%d`
+HN=`hostname -s`
+PATH=/var/log/collectl
+cd "$PATH"
+FILE="performance-tab-$HN-$DF.tab"
+LINK="daily.log"
+
+
+# Check if today's file exists
+if [ -f $FILE ]; then
+        # check if the link exists
+        if [ -h $LINK ]; then
+                # check if link is pointing to file
+                TARGET=`/bin/ls -l $LINK |/usr/bin/awk '{print $11}'`
+                if [ "$FILE" == "$TARGET" ]; then
+                        # there is a link, and it is correct
+                        echo "file and target of link are the same, nothing to do"
+                        exit 0
+                else
+                        # there is a link, but it is not correct
+                        echo "link is outdated, removing link"
+                        /bin/rm -f "$LINK"
+                        find /var/log/collectl -mtime +2 -exec rm {} \;
+                fi
+        fi
+        # at this point the link either didn't exist, or was outdated and removed
+        echo "linking to today's file"
+        /bin/ln -s "$FILE" "$LINK"
+else
+        echo "Oops: file $FILE doesn't exist"
+fi
