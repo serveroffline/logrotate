@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script for DaemonCommands = -f /var/log/collectl/performance-tab -r00:00,0 -F1 -s+YZ -oz -P --interval 30
+
 DF=`date +%Y%m%d`
 HN=`hostname -s`
 PATH=/var/log/collectl
@@ -22,7 +22,8 @@ if [ -f $FILE ]; then
                         # there is a link, but it is not correct
                         echo "link is outdated, removing link"
                         /bin/rm -f "$LINK"
-                        find /var/log/collectl -mtime +2 -exec rm {} \;
+                        echo "going to remove all files older than 2 days"
+                        /bin/find /var/log/collectl -mtime +2 -exec /bin/rm {} \;
                 fi
         fi
         # at this point the link either didn't exist, or was outdated and removed
